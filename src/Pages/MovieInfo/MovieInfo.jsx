@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
+
+const IMAGES_BASE_URL = 'https://image.tmdb.org/t/p/w200/'
 let genres = [];
 
 const MovieInfo = () => {
@@ -27,7 +29,7 @@ const MovieInfo = () => {
   return (
     <div>
       <div className="img-box">
-        <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+      <img src={IMAGES_BASE_URL + movie.poster_path} alt={movie.title} />
       </div>
       <div className="info-box">
         <h2>{movie.title} ({releaseYear})</h2>
