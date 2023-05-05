@@ -15,18 +15,21 @@ const Home = () => {
   }, []);
 
   return (
-    <ul>
-      {trandingMovies.map(movie => {
-        const title = movie.title ?? movie.name;
-        return (
-          <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-              {title}
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <h2>Tranding today</h2>
+      <ul>
+        {trandingMovies.map(movie => {
+          const title = movie.title ?? movie.name;
+          return (
+            <li key={movie.id}>
+              <Link to={`/movies/${movie.id}`} state={{ from: location }}>
+                {title}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };
 
