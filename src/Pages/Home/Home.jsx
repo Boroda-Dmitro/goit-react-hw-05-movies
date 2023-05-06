@@ -1,35 +1,43 @@
 import { fetchTrendingMovies } from 'Services/fetchMovies';
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import css from './Home.module.css';
+import MoviesList from 'components/MoviesList/MoviesList';
+import { Loader } from 'components/Loader/Loader';
 
 const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [error, setError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const location = useLocation();
   useEffect(() => {
-    const getMovies = async () => {
-      const movies = await fetchTrendingMovies();
-      setTrendingMovies(movies);
-    };
+    try {
+      setLoading(true);
+      const getMovies = async () => {
+        const movies = await fetchTrendingMovies();
+        setTrendingMovies(movies);
+      };
 
-    getMovies();
+      getMovies();
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setError(true);
+      } else {
+        setError(true);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   return (
     <>
+      {isLoading && <Loader />}
+      {error && <h2 className={css.title}>No data from services</h2>}
       <h2 className={css.title}>Trending today</h2>
-      <ul className={css.list}>
-        {trendingMovies.map(movie => {
-          const title = movie.title ?? movie.name;
-          return (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-                {title}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      {trendingMovies.length > 0 && (
+        <MoviesList movies={trendingMovies} state={{ from: location }} />
+      )}
     </>
   );
 };

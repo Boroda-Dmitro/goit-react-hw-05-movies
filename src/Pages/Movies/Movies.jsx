@@ -1,13 +1,17 @@
 import { fetchSearchMovies } from 'Services/fetchMovies';
 import { useState, useEffect } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import MoviesList from 'components/MoviesList/MoviesList';
 import css from './Movies.module.css';
+import { Loader } from 'components/Loader/Loader';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const location = useLocation();
   const params = searchParams.get('query');
 
@@ -24,13 +28,20 @@ const Movies = () => {
     }
     const fetchMovies = async () => {
       try {
+        setLoading(true);
         const searchedMovies = await fetchSearchMovies(params);
         if (searchedMovies.length === 0) {
           return toast.error(`No movies found for '${params}'`);
         }
         setMovies(searchedMovies);
       } catch (error) {
-        console.log(error);
+        if (error.response && error.response.status === 404) {
+          setError(true);
+        } else {
+          setError(true);
+        }
+      } finally {
+        setLoading(false);
       }
     };
     fetchMovies();
@@ -61,20 +72,11 @@ const Movies = () => {
           Search
         </button>
       </form>
-      <ul>
-        {movies.length > 0 &&
-          params &&
-          movies.map(movie => {
-            const title = movie.title ?? movie.name;
-            return (
-              <li key={movie.id}>
-                <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-                  {title}
-                </Link>
-              </li>
-            );
-          })}
-      </ul>
+      {isLoading && <Loader />}
+      {error && <h2>No data from services</h2>}
+      {movies.length > 0 && params && (
+        <MoviesList movies={movies} state={{ from: location }} />
+      )}
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import css from './MovieDetails.module.css';
+import noImages from '../../components/images/NoImages.jpg';
 
 const IMAGES_BASE_URL = 'https://image.tmdb.org/t/p/w200/';
 let genres = '';
@@ -27,10 +28,8 @@ const MovieDetails = () => {
       } catch (error) {
         if (error.response && error.response.status === 404) {
           setError(true);
-          console.log(error);
         } else {
           setError(true);
-          console.log(error);
         }
       } finally {
         setLoading(false);
@@ -45,13 +44,12 @@ const MovieDetails = () => {
 
   return (
     <div>
-      {isLoading ? (
-        <Loader />
-      ) : (
+      <Link to={backLocation.current} className={css.button}>
+        Go back
+      </Link>
+      {isLoading && <Loader />}
+      {!isLoading && (
         <div>
-          <Link to={backLocation.current} className={css.button}>
-            Go back
-          </Link>
           {error ? (
             <h2>No information for this movie</h2>
           ) : (
@@ -59,7 +57,11 @@ const MovieDetails = () => {
               <div className={css.movie_box}>
                 <div className={css.img_box}>
                   <img
-                    src={IMAGES_BASE_URL + movie.poster_path}
+                    src={
+                      movie.poster_path
+                        ? IMAGES_BASE_URL + movie.poster_path
+                        : noImages
+                    }
                     alt={movie.title}
                   />
                 </div>
