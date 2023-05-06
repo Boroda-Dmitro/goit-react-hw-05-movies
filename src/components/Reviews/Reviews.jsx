@@ -1,17 +1,18 @@
-import { fetchMovieReviews } from 'Servises/fetchMovies';
+import { fetchMovieReviews } from 'Services/fetchMovies';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import css from './Reviews.module.css';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const { movieId } = useParams();
   useEffect(() => {
-    const getMovietReviews = async () => {
+    const getMovieReviews = async () => {
       const movieReviews = await fetchMovieReviews(movieId);
       setReviews(movieReviews.results);
     };
 
-    getMovietReviews();
+    getMovieReviews();
   }, [movieId]);
 
   if (reviews.length === 0) {
@@ -19,12 +20,12 @@ const Reviews = () => {
   }
 
   return (
-    <ul>
+    <ul className={css.reviews}>
       {reviews.map(review => {
         return (
           <li key={review.id}>
             <h4>Author: {review.author}</h4>
-            <p>Charecter: {review.content}</p>
+            <p>Character: {review.content}</p>
           </li>
         );
       })}

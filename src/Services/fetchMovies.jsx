@@ -26,7 +26,7 @@ export const fetchMovieById = async (id) => {
 
   try {
     const movie = await axios.get(`${URL}?${options}`);
-    return movie.data;
+    return movie;
   } catch (error) {
     console.log(error);
   }
@@ -66,15 +66,15 @@ export const fetchMovieReviews = async (id) => {
   }
 };
 
-export const fetchSerchMovies = async (search) => {
+export const fetchSearchMovies = async search => {
   const URL = `https://api.themoviedb.org/3/search/movie`;
   const KEY = 'efcd079eaa7382b8a49b8fa3c0261e85';
-  
+
   const options = new URLSearchParams({
     api_key: KEY,
     query: search,
   });
-  
+
   try {
     const movie = await axios.get(`${URL}?${options}`);
     return movie.data.results;

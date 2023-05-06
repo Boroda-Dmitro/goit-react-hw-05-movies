@@ -1,7 +1,8 @@
-import { fetchSerchMovies } from 'Servises/fetchMovies';
+import { fetchSearchMovies } from 'Services/fetchMovies';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import css from './Movies.module.css';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,7 +14,7 @@ const Movies = () => {
   const handleChange = e => {
     setSearch(e.target.value.trim());
     if (e.target.value === '') {
-        setSearchParams({})
+      setSearchParams({});
     }
   };
 
@@ -23,7 +24,7 @@ const Movies = () => {
     }
     const fetchMovies = async () => {
       try {
-        const searchedMovies = await fetchSerchMovies(params);
+        const searchedMovies = await fetchSearchMovies(params);
         if (searchedMovies.length === 0) {
           return toast.error(`No movies found for '${params}'`);
         }
@@ -54,16 +55,22 @@ const Movies = () => {
           placeholder="Search movies"
           onChange={handleChange}
           value={search}
+          className={css.input}
         />
-        <button type="submit">Search</button>
+        <button type="submit" className={css.button}>
+          Search
+        </button>
       </form>
       <ul>
-        {movies.length > 0 && params &&
+        {movies.length > 0 &&
+          params &&
           movies.map(movie => {
             const title = movie.title ?? movie.name;
             return (
               <li key={movie.id}>
-                <Link to={`/movies/${movie.id}`} state={{ from: location }}>{title}</Link>
+                <Link to={`/movies/${movie.id}`} state={{ from: location }}>
+                  {title}
+                </Link>
               </li>
             );
           })}

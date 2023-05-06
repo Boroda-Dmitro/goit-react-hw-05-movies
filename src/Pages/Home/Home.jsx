@@ -1,14 +1,15 @@
-import { fetchTrendingMovies } from 'Servises/fetchMovies';
+import { fetchTrendingMovies } from 'Services/fetchMovies';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import css from './Home.module.css';
 
 const Home = () => {
-  const [trandingMovies, setTrandingMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
   const location = useLocation();
   useEffect(() => {
     const getMovies = async () => {
       const movies = await fetchTrendingMovies();
-      setTrandingMovies(movies);
+      setTrendingMovies(movies);
     };
 
     getMovies();
@@ -16,9 +17,9 @@ const Home = () => {
 
   return (
     <>
-      <h2>Tranding today</h2>
-      <ul>
-        {trandingMovies.map(movie => {
+      <h2 className={css.title}>Trending today</h2>
+      <ul className={css.list}>
+        {trendingMovies.map(movie => {
           const title = movie.title ?? movie.name;
           return (
             <li key={movie.id}>
