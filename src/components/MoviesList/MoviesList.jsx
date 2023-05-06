@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import css from './MoviesList.module.css';
 import { Link } from 'react-router-dom';
 
@@ -19,3 +20,16 @@ const MoviesList = ({ movies, state }) => {
 };
 
 export default MoviesList;
+
+MoviesList.propTypes = {
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ).isRequired,
+  state: PropTypes.shape({
+    from: PropTypes.string,
+  }),
+};
